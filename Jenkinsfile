@@ -11,6 +11,15 @@ pipeline {
     stage('Test') {
       steps {
         sh 'docker run apache-docker-example'
+	HTTP_CODE = sh (
+           script: 'echo $(curl --write-out \\"%{http_code}\\" --silent --output /dev/null http://localhost/)',
+           returnStdout: true
+           ).trim()
+
+        if ('200' != HTTP_CODE) {
+        	currentBuild.result = "FAILURE"
+                error('Test stage failed!)
+        }
       }
     }
     stage('Deploy') {
