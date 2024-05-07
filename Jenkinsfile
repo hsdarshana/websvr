@@ -5,7 +5,7 @@ pipeline {
     stage('Checkout') {
       steps {
         // checkout code from github repo
-	git 'https://github.com/hsdarshana/websvr.git'
+	git branch: 'main', url: 'https://github.com/hsdarshana/websvr.git'
       }
     }
 
