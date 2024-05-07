@@ -1,6 +1,8 @@
-FROM httpd:2.4
+# Use an official apache image
+FROM httpd:latest
 
-COPY ./website/ /usr/local/apache2/htdocs/
+# Copy html files from repo to web server 
+COPY ./website/index.html /usr/local/apache2/htdocs/
 
 
 

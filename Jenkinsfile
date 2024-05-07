@@ -2,38 +2,28 @@ pipeline {
   agent any
 
   stages {
-    stage('Build') {
+    stage('Checkout') {
       steps {
-        sh 'docker build -t apache-docker-example .'
-        sh 'docker tag apache-docker-example apache-docker'
+        // checkout code from github repo
+	git 'https://github.com/hsdarshana/websvr.git'
       }
     }
-    stage('Test') {
-      steps {
-        sh 'docker run apache-docker-example'
-	HTTP_CODE = sh (
-           script: 'echo $(curl --write-out \\"%{http_code}\\" --silent --output /dev/null http://localhost/)',
-           returnStdout: true
-           ).trim()
 
-        if ('200' != HTTP_CODE) {
-           currentBuild.result = "FAILURE"
-           error('Test stage failed!)
-        }
-      }
-    }
-    stage('Deploy') {
+    stage('Build Docker Image') {
       steps {
-        withCredentials([usernamePassword(credentialsId: "${DOCKER_REGISTRY_CREDS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-          sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin docker.io"
-	  sh 'docker push hsdarshana/myrepo:newimage'
+        script {
+	   // Build docker image with Apache web server
+	   docker.build('my-apache-webserver', '-f Dockerfile .')
         }
       }
     }
-  }
-  post {
-    always {
-      sh 'docker logout'
+
+    stage('Run Docker Container') {
+      steps {
+        // Run docker container with exposed port 8888
+	script {
+	   docker.image('my-apache-webserver').run('-p 8888:80')
+        }
+      }
     }
-  }
 }
