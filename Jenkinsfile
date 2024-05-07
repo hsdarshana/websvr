@@ -13,7 +13,7 @@ pipeline {
       steps {
         script {
 	   // Build docker image with Apache web server
-	   docker.build('my-apache-webserver', '-f Dockerfile .')
+	   sh 'docker build -t my-apache-webserver .'
         }
       }
     }
