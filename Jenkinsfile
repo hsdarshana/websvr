@@ -22,7 +22,7 @@ pipeline {
       steps {
         // Run docker container with exposed port 8888
 	script {
-	   docker.image('my-apache-webserver').run('-p 8888:80')
+	   sh 'docker run my-apache-webserver -p 8888:80'
         }
       }
     }
