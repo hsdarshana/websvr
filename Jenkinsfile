@@ -27,6 +27,7 @@ pipeline {
 	   echo "Build Failed!"
 	   error('Stopping early…')
 	}
+      }
     }
     stage('Run Docker Container') {
       steps {
