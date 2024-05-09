@@ -10,6 +10,10 @@ pipeline {
     }
 
     stage('Build Docker Image') {
+      input{
+    	message "Do you want to proceed for production deployment?"
+      }
+
       steps {
         script {
 	   // Build docker image with Apache web server
