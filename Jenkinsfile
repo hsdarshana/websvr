@@ -20,15 +20,27 @@ pipeline {
 	   sh 'docker build -t my-apache-webserver .'
         }
       }
+     
+      post {
+	success {
+	   echo "Build Successful!"
+   	}
+	failure {
+	   echo "Build Failed!"
+	}
+
     }
 
     stage('Run Docker Container') {
+
       steps {
         // Run docker container with exposed port 8888
 	script {
 	   sh 'docker run -d --name my-apache-webserver -p 80:80 my-apache-webserver'
         }
       }
+
     }
+
   }
 }
